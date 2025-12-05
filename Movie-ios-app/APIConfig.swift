@@ -1,0 +1,38 @@
+//
+//  ApConfig.swift
+//  Movie-ios-app
+//
+//  Created by Hammad Ali on 05/12/2025.
+//
+
+import Foundation
+
+struct APIConfig : Decodable {
+    let tmdbBaseURL: String
+    let TmdbAPIKey: String
+    
+    static let shared: APIConfig? = {
+        do{
+            return try loadConfig()
+        }
+        catch{
+            print("Failed to load API config : \(error.localizedDescription)")
+            return nil
+        }
+    }()
+    private static func loadConfig() throws -> APIConfig{
+        guard let url = Bundle.main.url(forResource: "APIConfig", withExtension: "json") else {
+            throw APIConfigError.filenotfound
+        }
+        do{
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode(APIConfig.self, from: data)
+        }
+        catch let error as DecodingError {
+            throw APIConfigError.decodingfailded(underlyingError: error)
+        }
+        catch {
+            throw APIConfigError.dataloadingfailed(underlyingError: error)
+        }
+    }
+}

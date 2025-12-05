@@ -11,8 +11,8 @@ struct ContentView: View {
     var body: some View {
         TabView{
             Tab(constant.homestring, systemImage: constant.homeicon){
-                Text(constant.homestring)
-//                HomeView(
+//                Text(constant.homestring)
+              HomeView()
             }
             Tab(constant.upcommingtring, systemImage: constant.upcommingicon){
                 Text(constant.upcommingtring)
@@ -22,6 +22,12 @@ struct ContentView: View {
             }
             Tab(constant.downloadstring, systemImage: constant.downloadicon){
                 Text(constant.downloadstring)
+            }
+        }
+        .onAppear{
+            if let Config = APIConfig.shared{
+                print(Config.TmdbAPIKey)
+                print(Config.tmdbBaseURL)
             }
         }
     }
