@@ -9,7 +9,7 @@ import Foundation
 
 struct APIConfig : Decodable {
     let tmdbBaseURL: String
-    let TmdbAPIKey: String
+    let tmdbAPIKey: String
     
     static let shared: APIConfig? = {
         do{
