@@ -29,4 +29,14 @@ func fetchTitles(for Media: String) async throws -> [Title]{
     print(fetchTitleURL)
     
     let (data, urlResponse) = try await URLSession.shared.data(from: fetchTitleURL)
+    guard let response = urlResponse as? HTTPURLResponse, response.statusCode == 200 else {
+        throw NetworkError.badURLResponse(underlayingError: NSError(
+            domain: "DataFetcher",
+            code: (urlResponse as? HTTPURLResponse)?.statusCode ?? -1,
+            userInfo: [NSLocalizedDescriptionKey: "Invalid HTTP Response"]))
+    }
+    
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+    return try decoder.decode(APIObject.self, from: data).result
 }
