@@ -7,15 +7,20 @@
 
 import Foundation
 
-struct APIObject: Decodable{
+struct APIObject: Decodable {
     var result: [Title] = []
 }
 
-struct Title : Decodable, Identifiable{
+struct Title : Decodable, Identifiable {
     var id: Int?
     var title: String?
     var name: String?
     var overView: String?
     var posterPath: String?
-    
+
+    static var previewTitles = [
+        Title(id: 1, title: "BeetleJuice" , name: "BeetleJuice", overView: "A movie about BeetleJuice", posterPath: constant.testtitleURL),
+        Title(id: 2 , title: "PulpeFiction", name: "PulpeFiction", overView: "A movie about PupleFiction", posterPath: constant.testtitleURL2),
+        Title(id: 3 , title: "The Dark Knight" , name: "The Dark Knight", overView: "A movie about Dark Knight", posterPath: constant.testtitleURL3)
+    ]
 }
