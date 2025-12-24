@@ -26,7 +26,7 @@ struct ContentView: View {
         }
         .onAppear{
             if let Config = APIConfig.shared{
-                print(Config.TmdbAPIKey)
+                print(Config.tmdbAPIKey)
                 print(Config.tmdbBaseURL)
             }
         }

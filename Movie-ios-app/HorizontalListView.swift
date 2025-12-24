@@ -9,11 +9,7 @@ import SwiftUI
 
 struct HorizontalListView: View {
     let header : String
-    let title = [
-        constant.testtitleURL,
-        constant.testtitleURL2,
-        constant.testtitleURL3
-    ]
+    let title : [Title]
     var body: some View {
         VStack(alignment: .leading) {
             Text(header)
@@ -21,8 +17,8 @@ struct HorizontalListView: View {
             
             ScrollView(){
                 LazyHStack {
-                ForEach(title, id: \.self) { title in
-                    AsyncImage(url: URL(string: title)){ image in
+                ForEach(title,) { title in
+                    AsyncImage(url: URL(string: title.posterPath ?? "")){ image in
                         image
                             .resizable()
                             .scaledToFit()
@@ -41,5 +37,5 @@ struct HorizontalListView: View {
 }
 
 #Preview {
-    HorizontalListView(header: constant.trendingMoviesString)
+    HorizontalListView(header: constant.trendingMoviesString, title: Title.previewTitles)
 }

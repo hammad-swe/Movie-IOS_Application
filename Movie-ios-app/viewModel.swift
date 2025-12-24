@@ -8,27 +8,42 @@
 import Foundation
 
 @Observable
-class viewModel {
-    enum fetchStatus{
+class ViewModel {
+    enum FetchStatus{
         case notStarted
         case fetching
         case success
         case failed(underlyingError: Error)
     }
-    private(set) var homestatus: fetchStatus = .notStarted
+    private(set) var homestatus: FetchStatus = .notStarted
     private let datafetcher = DataFetcher()
     
     var trendingMovies: [Title] = []
+    var trendingTV: [Title] = []
+    var topRatedMovies: [Title] = []
+    var topRatedTV: [Title] = []
     
-    func getTitles() async{
+    func getTitles() async {
         homestatus = .fetching
-        do{
-            trendingMovies = try await datafetcher.fetchTitles(for: "movie")
-            homestatus = .success
-        }
-        catch{
-            print(error)
-            homestatus = .failed(underlyingError: error)
+        if trendingMovies.isEmpty {
+            do{
+                async let tMovies = datafetcher.fetchTitles(for: "movie", by: "trending")
+                async let tTV = datafetcher.fetchTitles(for: "tv", by: "trending")
+                async let tRMovies = datafetcher.fetchTitles(for: "movie", by: "top_rated")
+                async let tRTV =  datafetcher.fetchTitles(for: "tv", by: "top_rated")
+                
+                trendingMovies = try await tMovies
+                trendingTV = try await tTV
+                topRatedMovies =  try await tRMovies
+                topRatedTV =  try await tRTV
+                homestatus = .success
+            }
+            catch{
+                print(error)
+                homestatus = .failed(underlyingError: error)
+            }
+        } else{
+            homestatus =  .success
         }
     }
 }
