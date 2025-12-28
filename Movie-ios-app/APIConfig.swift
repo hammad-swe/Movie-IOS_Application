@@ -20,6 +20,7 @@ struct APIConfig : Decodable {
             return nil
         }
     }()
+    
     private static func loadConfig() throws -> APIConfig{
         guard let url = Bundle.main.url(forResource: "APIConfig", withExtension: "json") else {
             throw APIConfigError.filenotfound

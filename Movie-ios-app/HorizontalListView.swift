@@ -10,14 +10,15 @@ import SwiftUI
 struct HorizontalListView: View {
     let header : String
     let title : [Title]
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text(header)
                 .font(.title)
             
-            ScrollView(){
+            ScrollView(.horizontal){
                 LazyHStack {
-                ForEach(title,) { title in
+                ForEach(title) { title in
                     AsyncImage(url: URL(string: title.posterPath ?? "")){ image in
                         image
                             .resizable()

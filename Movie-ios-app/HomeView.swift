@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     var heroTextTitle = constant.testtitleURL
     let viewModel = ViewModel()
+    
     var body: some View {
         GeometryReader { geo in
             ScrollView(.vertical){
@@ -58,10 +59,9 @@ struct HomeView: View {
     HorizontalListView(header: constant.topratedmoviesstring, title: viewModel.topRatedMovies)
     HorizontalListView(header: constant.topratedTVString, title: viewModel.topRatedTV)
                     }
-                case .failed(let underlyingError):
-                    let message = (underlyingError as? LocalizedError)?.errorDescription
-                        ?? underlyingError.localizedDescription
-                    Text("Error: \(message)")
+                case .failed(let error):
+    
+                    Text("Error: \(error)")
                     
                 }
                 

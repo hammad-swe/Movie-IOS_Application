@@ -16,9 +16,9 @@ struct constant {
     static let downloadstring = "Download"
     static let playstring = "Play"
     static let trendingMoviesString = "Trending Movies"
-    static let trendingTVString = "Trending TV Shows"
+    static let trendingTVString = "Trending TV"
     static let topratedmoviesstring = "Top Rated Movies"
-    static let topratedTVString = "Top Rated TV Shows"
+    static let topratedTVString = "Top Rated TV"
     
     //    icons
     static let homeicon = "house"
@@ -34,7 +34,7 @@ struct constant {
     
     static let posterUrlStart = "hhttps://image.tmdb.org/t/p/w500/"
     
-    func addPosterPath(to titles: inout[Title]) {
+   static func addPosterPath(to titles: inout[Title]) {
         for index in titles.indices {
             if let path = titles[index].posterPath {
                 titles[index].posterPath =  constant.posterUrlStart + path

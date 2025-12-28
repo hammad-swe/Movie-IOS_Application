@@ -13,15 +13,16 @@ struct DataFetcher {
     
     //https://api.themoviedb.org/3/trending/movie/day?api_key=Your_API_KEY
     //https://api.themoviedb.org/3/movie/top_rated?api_key=Your_API_KEY
-    func fetchTitles(for media: String, by type:String) async throws -> [Title]{
-     let fetchTitleURL = try buildURL(media: media, type: type)
+    func fetchTitles(for media:String, by type:String) async throws -> [Title] {
+     let fetchTitlesURL = try buildURL(media: media, type: type)
         
-        guard let fetchTitleURL =  fetchTitleURL else{
+        guard let fetchTitlesURL =  fetchTitlesURL else {
             throw NetworkError.urlbuildFailed
         }
-        print(fetchTitleURL)
+        print(fetchTitlesURL)
         
-        let (data, urlResponse) = try await URLSession.shared.data(from: fetchTitleURL)
+        let (data, urlResponse) = try await URLSession.shared.data(from: fetchTitlesURL)
+        
         guard let response = urlResponse as? HTTPURLResponse, response.statusCode == 200 else {
             throw NetworkError.badURLResponse(underlayingError: NSError(
                 domain: "DataFetcher",
@@ -32,10 +33,10 @@ struct DataFetcher {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         var titles = try decoder.decode(APIObject.self, from: data).result
-        constant().addPosterPath(to: &titles)
+        constant.addPosterPath(to: &titles)
         return titles
     }
-    private func buildURL(media: String, type: String) throws -> URL? {
+    private func buildURL(media:String, type:String) throws -> URL? {
         guard let baseURL = tmdbBaseURL else {
             throw NetworkError.missingConfig
         }
@@ -43,11 +44,11 @@ struct DataFetcher {
             throw NetworkError.missingConfig
         }
         
-        var path: String
+        var path:String
         
         if type == "trending" {
-            path = "3/trendin/\(media)/day"
-        }else if type == "top_rated"{
+            path = "3/trending/\(media)/day"
+        }else if type == "top_rated" {
             path = "3/\(media)/top_rated"
             
         } else {

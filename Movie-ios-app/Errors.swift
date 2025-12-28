@@ -12,13 +12,11 @@ enum APIConfigError: Error, LocalizedError{
     case dataloadingfailed(underlyingError: Error)
     case decodingfailded(underlyingError: Error)
     
-    var errorDescription: String?{
+    var errorDescription: String? {
         switch self{
-            case
-                .filenotfound:
+            case .filenotfound:
             return "API Configuration File not found"
-            case
-                .dataloadingfailed(underlyingError: let error):
+            case .dataloadingfailed(underlyingError: let error):
             return  "Failed to load data from Configuration File : \(error.localizedDescription)"
             
         case .decodingfailded(underlyingError: let error):
