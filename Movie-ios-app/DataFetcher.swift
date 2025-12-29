@@ -32,7 +32,7 @@ struct DataFetcher {
         
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        var titles = try decoder.decode(APIObject.self, from: data).result
+        var titles = try decoder.decode(APIObject.self, from: data).results
         constant.addPosterPath(to: &titles)
         return titles
     }
