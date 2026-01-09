@@ -16,6 +16,7 @@ class ViewModel {
         case failed(underlyingError: Error)
     }
     private(set) var homestatus: FetchStatus = .notStarted
+    private(set) var videoIdtatus: FetchStatus = .notStarted
     private let datafetcher = DataFetcher()
     
     var trendingMovies: [Title] = []
@@ -23,6 +24,7 @@ class ViewModel {
     var topRatedMovies: [Title] = []
     var topRatedTV: [Title] = []
     var heroTitle = Title.previewTitles[0]
+    var videoId = ""
     
     func getTitles() async {
         homestatus = .fetching
@@ -52,5 +54,8 @@ class ViewModel {
         } else{
             homestatus =  .success
         }
+    }
+    func getVideoId(for titles: String) async {
+        
     }
 }

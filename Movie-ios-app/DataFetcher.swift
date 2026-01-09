@@ -9,6 +9,8 @@ import Foundation
 struct DataFetcher {
     let tmdbBaseURL = APIConfig.shared?.tmdbBaseURL
     let tmdbAPIKey = APIConfig.shared?.tmdbAPIKey
+    let youtubeSearchURL = APIConfig.shared?.youtubeSearchURL
+    let youtubeAPIKey = APIConfig.shared?.youtubeAPIKey
     
     
     //https://api.themoviedb.org/3/trending/movie/day?api_key=Your_API_KEY
@@ -20,8 +22,36 @@ struct DataFetcher {
             throw NetworkError.urlbuildFailed
         }
         print(fetchTitlesURL)
+        var titles = try await fetchAndDecode(url: fetchTitlesURL, type: TMDBAPIObject.self).results
+       
+        constant.addPosterPath(to: &titles)
+        return titles
+    }
+    
+    
+ //https://www.googleapis.com/youtube/v3/search?q=Breaking%20Bad%20trailer&key=APIKEy
+    func fetchVideoId(for title: String) async throws -> String {
+        guard let baseSearchURL = youtubeSearchURL else {
+            throw NetworkError.missingConfig
+        }
+        guard let searchAPIKey = youtubeAPIKey else {
+            throw NetworkError.missingConfig
+        }
+        let trailerSearch = title + YoutubeURLString.space.rawValue + YoutubeURLString.trailer.rawValue
         
-        let (data, urlResponse) = try await URLSession.shared.data(from: fetchTitlesURL)
+        guard let fetchVideoURL = URL(string: baseSearchURL)?.appending(queryItems: [
+            URLQueryItem(name: YoutubeURLString.queryShorten.rawValue, value: trailerSearch),
+            URLQueryItem(name: YoutubeURLString.key.rawValue, value: searchAPIKey)
+        ]) else {
+            throw NetworkError.urlbuildFailed
+        }
+        print(fetchVideoURL)
+        
+        return try await fetchAndDecode(url: fetchVideoURL, type: YoutubeSearchResponse.self).items?.first?.id?.videoid ?? ""
+    }
+    
+    func fetchAndDecode<T: Decodable>(url: URL, type:T.Type) async throws -> T {
+        let (data, urlResponse) = try await URLSession.shared.data(from: url)
         
         guard let response = urlResponse as? HTTPURLResponse, response.statusCode == 200 else {
             throw NetworkError.badURLResponse(underlayingError: NSError(
@@ -32,10 +62,9 @@ struct DataFetcher {
         
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        var titles = try decoder.decode(APIObject.self, from: data).results
-        constant.addPosterPath(to: &titles)
-        return titles
+        return try decoder.decode(type, from: data)
     }
+    
     private func buildURL(media:String, type:String) throws -> URL? {
         guard let baseURL = tmdbBaseURL else {
             throw NetworkError.missingConfig
