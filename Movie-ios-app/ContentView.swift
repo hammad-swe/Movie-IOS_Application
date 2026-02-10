@@ -12,7 +12,7 @@ struct ContentView: View {
         TabView{
             Tab(constant.homestring, systemImage: constant.homeicon){
 //                Text(constant.homestring)
-              HomeView()
+             HomeView()
             }
             Tab(constant.upcommingtring, systemImage: constant.upcommingicon){
                 Text(constant.upcommingtring)

@@ -55,7 +55,14 @@ class ViewModel {
             homestatus =  .success
         }
     }
-    func getVideoId(for titles: String) async {
-        
+    func getVideoId(for title: String) async {
+        videoIdtatus = .fetching
+        do{
+            videoId =  try await datafetcher.fetchVideoId(for: title)
+            videoIdtatus = .success
+        } catch{
+            print(error)
+            videoIdtatus = .failed(underlyingError: error)
+        }
     }
 }
