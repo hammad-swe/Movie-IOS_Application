@@ -18,7 +18,8 @@ struct ContentView: View {
                 UpcommingView()
             }
             Tab(constant.search, systemImage: constant.searchicon){
-                Text(constant.search)
+                SearchView()
+
             }
             Tab(constant.downloadstring, systemImage: constant.downloadicon){
                 Text(constant.downloadstring)

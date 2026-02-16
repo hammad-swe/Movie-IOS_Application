@@ -72,7 +72,7 @@ struct HomeView: View {
                         }
                     case .failed(let error):
                         
-                        Text("Error: \(error)")
+                        Text("Error: (error)")
                         
                     }
                     
