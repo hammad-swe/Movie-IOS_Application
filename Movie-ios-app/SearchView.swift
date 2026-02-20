@@ -8,14 +8,23 @@
 import SwiftUI
 
 struct SearchView: View {
-    var titles = Title.previewTitles
     @State private var searchByMovies = true
     @State private var searchText = ""
+    private let searchViewModel =  SearchViewModel()
     var body: some View {
         NavigationStack {
             ScrollView{
+                
+                if let error = searchViewModel.errorMessage{
+                    Text(error)
+                        .foregroundStyle(.red)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .clipShape(.rect(cornerRadius: 10))
+                }
+                
                 LazyVGrid(columns: [GridItem(),GridItem(),GridItem()]) {
-                    ForEach(titles) { title in
+                    ForEach(searchViewModel.searchTitles) { title in
                         AsyncImage(url: URL(string: title.posterPath ?? "")){
                             image in
                             image
@@ -29,18 +38,29 @@ struct SearchView: View {
                     }
                 }
             }
-        }
-        .navigationTitle(searchByMovies ? constant.movieSearchString : constant.tvSearchString)
-        .toolbar{
-            ToolbarItem(placement: .topBarTrailing) {
-                Button{
-                    searchByMovies.toggle()
-                } label: {
-                    Image(systemName: searchByMovies ? constant.movieIcon : constant.tvIcon)
+            .navigationTitle(searchByMovies ? constant.movieSearchString : constant.tvSearchString)
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button{
+                        searchByMovies.toggle()
+                        Task{
+                            await searchViewModel.getSearchTitles(by: searchByMovies ? "movie": "tv", for: searchText)
+                        }
+                    } label: {
+                        Image(systemName: searchByMovies ? constant.movieIcon : constant.tvIcon)
+                    }
                 }
             }
+            .searchable(text: $searchText, prompt: searchByMovies ? constant.moviePlaceholderString : constant.tvPlaceholderString)
+            .task(id: searchText){
+                try? await Task.sleep(for: .milliseconds(500))
+                if Task.isCancelled{
+                    return
+                }
+                await searchViewModel.getSearchTitles(by: searchByMovies ? "movie": "tv", for: searchText)
+            }
         }
-        .searchable(text: $searchText, prompt: searchByMovies ? constant.moviePlaceholderString : constant.tvPlaceholderString)
+        
     }
 }
 
