@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     let viewModel = ViewModel()
     @State private var titleDetailPath = NavigationPath()
+    @Environment(\.modelContext) var modelContext
     var body: some View {
         NavigationStack(path: $titleDetailPath) {
             GeometryReader { geo in
@@ -47,7 +49,8 @@ struct HomeView: View {
                                         .ghostbutton()
                                 }
                                 Button {
-                                    
+                                    modelContext.insert(viewModel.heroTitle)
+                                    try? modelContext.save() 
                                 } label: {
                                     Text(constant.downloadstring)
                                         .ghostbutton()
@@ -69,8 +72,7 @@ struct HomeView: View {
                         }
                         .navigationDestination(for: Title.self) { title in
                             TitleDetailView(title: title)
-                        }
-                    case .failed(let error):
+                
                         
                         Text("Error: (error)")
                         
