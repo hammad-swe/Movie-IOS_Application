@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct VerticalListView: View {
     var titles : [Title]
+    let conDelete: Bool
+    @Environment(\.modelContext) var modelContext
     var body: some View {
         List(titles){title in
             NavigationLink{
@@ -31,6 +34,18 @@ struct VerticalListView: View {
                 }
                 .frame(height: 150)
             }
+            .swipeActions(edge: .trailing){
+                if conDelete{
+                    Button {
+                        modelContext.delete(title)
+                        try? modelContext.save()
+                    } label: {
+                        Image(systemName: "trash")
+                            .tint(.red)
+                    }
+
+                }
+            }
             
         }
         
@@ -38,5 +53,5 @@ struct VerticalListView: View {
 }
 
 #Preview {
-    VerticalListView(titles: Title.previewTitles)
+    VerticalListView(titles: Title.previewTitles, conDelete: true)
 }

@@ -50,7 +50,7 @@ struct HomeView: View {
                                 }
                                 Button {
                                     modelContext.insert(viewModel.heroTitle)
-                                    try? modelContext.save() 
+                                    try? modelContext.save()
                                 } label: {
                                     Text(constant.downloadstring)
                                         .ghostbutton()
@@ -72,21 +72,21 @@ struct HomeView: View {
                         }
                         .navigationDestination(for: Title.self) { title in
                             TitleDetailView(title: title)
-                
-                        
-                        Text("Error: (error)")
+                            
+                            
+                            Text("Error: (error)")
+                            
+                        }
                         
                     }
-                    
-                }
-                .task {
-                    await viewModel.getTitles()
+                        .task{
+                            await viewModel.getTitles()
+                        }
                 }
             }
         }
     }
 }
-
 #Preview {
     HomeView()
 }
