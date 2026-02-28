@@ -39,7 +39,7 @@ struct HomeView: View {
                             } placeholder: {
                                 ProgressView()
                             }
-                            .frame(width: geo.size.width, height: geo.size.height * 0.85)
+                            .frame(width: geo.size.width, height: geo.size.height)
                             
                             HStack{
                                 Button {
@@ -70,18 +70,19 @@ struct HomeView: View {
                                 titleDetailPath.append(title)
                             }
                         }
-                        .navigationDestination(for: Title.self) { title in
+                    case .failed(let error):
+                        Text(error.localizedDescription)
+                            .errorMessage()
+                            .frame(width: geo.size.width, height: geo.size.height)
+
+                    }
+                }
+                .task {
+                    await viewModel.getTitles()
+                }
+                .navigationDestination(for: Title.self) { title in
                             TitleDetailView(title: title)
                             
-                            
-                            Text("Error: (error)")
-                            
-                        }
-                        
-                    }
-                        .task{
-                            await viewModel.getTitles()
-                        }
                 }
             }
         }

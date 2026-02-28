@@ -14,7 +14,6 @@ struct TMDBAPIObject: Decodable {
 @Model
 class Title : Decodable, Identifiable , Hashable {
     @Attribute(.unique) var id: Int?
-    var id: Int?
     var title: String?
     var name: String?
     var overView: String?
